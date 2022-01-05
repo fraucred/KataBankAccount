@@ -4,10 +4,10 @@ import java.time.LocalDate;
 
 public class BankClient {
 
-    private String firstName;
-    private String lastName;
-    private LocalDate birthday;
-    private String accountId;
+    private final String firstName;
+    private final String lastName;
+    private final LocalDate birthday;
+    private final String accountId;
     private final AccountHistory accountHistory;
 
     public BankClient(String firstName, String lastName, LocalDate birthday, String accountId) {

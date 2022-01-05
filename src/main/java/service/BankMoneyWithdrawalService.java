@@ -7,7 +7,6 @@ import domain.Transaction;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static helper.TransactionBuilder.buildDepositTransaction;
 import static helper.TransactionBuilder.buildWithdrawalTransaction;
 
 public class BankMoneyWithdrawalService {

@@ -1,12 +1,8 @@
 package service;
 
-import domain.AccountHistory;
-import domain.BankClient;
-import domain.Transaction;
-import domain.TransactionType;
+import domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,21 +12,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 class BankMoneyDepositServiceTest {
 
-    //    private BankAccountSecurityService bankAccountSecurityService;
     private BankMoneyDepositService bankMoneyDepositService;
-
-    @Mock
-    private BankAccountHistoryService bankAccountHistoryService;
 
     @BeforeEach
     void setUp() {
-        initMocks(this);
-//        bankAccountSecurityService = new BankAccountSecurityService();
         bankMoneyDepositService = new BankMoneyDepositService();
     }
 
@@ -41,27 +29,16 @@ class BankMoneyDepositServiceTest {
         final String bankClientLastName = "ma";
         final LocalDate bankClientBirthday = LocalDate.of(1994, 9, 7);
         final String bankClientAccountId = "FR123456";
-        final BigDecimal accountBalance = BigDecimal.valueOf(250);
-        final BigDecimal moneyToBeSaved = BigDecimal.valueOf(100.50);
+        final BigDecimal expectedAccountBalance = BigDecimal.valueOf(100.50);
+        final Money moneyToBeSaved = new Money().setAmount(BigDecimal.valueOf(100.50));
         final Date transactionDate = Date.from(Instant.now());
 
         final BankClient bankClient = new BankClient(bankClientFirstName, bankClientLastName, bankClientBirthday,
                 bankClientAccountId);
 
-        final Transaction depositTransaction = new Transaction()
-                .setTransactionType(TransactionType.DEPOSIT)
-                .setTransactionAmount(moneyToBeSaved)
-                .setAccountBalance(accountBalance)
-                .setDate(transactionDate);
-        final List<Transaction> mockTransactionList = List.of(depositTransaction);
-
-        final AccountHistory mockAccountHistory = new AccountHistory().setTransactionsHistory(mockTransactionList);
-        when(bankAccountHistoryService.getAccountHistory(bankClient)).thenReturn(mockAccountHistory);
-
         // WHEN
-//        bankAccountSecurityService.validateBankClient(bankClient.getAccountId());
         bankMoneyDepositService.deposit(bankClient, moneyToBeSaved);
-        final AccountHistory accountHistory = bankAccountHistoryService.getAccountHistory(bankClient);
+        final AccountHistory accountHistory = bankClient.getAccountHistory();
 
         // THEN
         assertNotNull(accountHistory);
@@ -72,8 +49,8 @@ class BankMoneyDepositServiceTest {
 
         final Transaction firstTransaction = transactionsHistory.get(0);
         assertEquals(TransactionType.DEPOSIT, firstTransaction.getTransactionType());
-        assertEquals(moneyToBeSaved, firstTransaction.getTransactionAmount());
-        assertEquals(accountBalance, firstTransaction.getAccountBalance());
+        assertEquals(moneyToBeSaved.getAmount(), firstTransaction.getTransactionAmount());
+        assertEquals(expectedAccountBalance, firstTransaction.getAccountBalance());
         assertEquals(transactionDate, firstTransaction.getDate());
     }
 }

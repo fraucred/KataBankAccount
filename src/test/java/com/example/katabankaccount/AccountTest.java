@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -101,8 +102,8 @@ public class AccountTest {
         Money moneyToBeSaved = new Money(BigDecimal.valueOf(200));
         Money moneyToDraw = new Money(BigDecimal.valueOf(25));
 
-        History depositHistory = new History(OperationType.DEPOSIT, Date.from(InstantHelper.now()), moneyToBeSaved, new Money(BigDecimal.valueOf(200)));
-        History withdrawHistory = new History(OperationType.WITHDRAW, Date.from(InstantHelper.now()), moneyToDraw, new Money(BigDecimal.valueOf(175)));
+        History depositHistory = new History(OperationType.DEPOSIT, Date.from(Instant.now()), moneyToBeSaved, new Money(BigDecimal.valueOf(200)));
+        History withdrawHistory = new History(OperationType.WITHDRAW, Date.from(Instant.now()), moneyToDraw, new Money(BigDecimal.valueOf(175)));
         List<History> expectedHistories = Arrays.asList(depositHistory, withdrawHistory);
 
         account.deposit(moneyToBeSaved);

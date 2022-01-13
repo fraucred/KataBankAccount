@@ -2,6 +2,7 @@ package com.example.katabankaccount;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Account {
 
     public void deposit(Money money) {
         this.balance.add(money);
-        this.histories.add(new History(OperationType.DEPOSIT, Date.from(InstantHelper.now()), money, this.balance.copy()));
+        this.histories.add(new History(OperationType.DEPOSIT, Date.from(Instant.now()), money, this.balance.copy()));
     }
 
     public Money balance() {
@@ -28,7 +29,7 @@ public class Account {
 
     public void withdraw(Money money) {
         this.balance.substract(money);
-        this.histories.add(new History(OperationType.WITHDRAW, Date.from(InstantHelper.now()), money, this.balance));
+        this.histories.add(new History(OperationType.WITHDRAW, Date.from(Instant.now()), money, this.balance));
     }
 
     public void withdrawAll() {

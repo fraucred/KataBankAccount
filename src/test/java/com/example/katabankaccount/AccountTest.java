@@ -85,7 +85,10 @@ public class AccountTest {
     }
 
     @Test
-    public void should_get_history_of_operations() {
+    public void should_get_empty_history_of_operations_from_my_account() {
+        Account account = new Account();
+        History expectedEmptyHistory = new History();
 
+        assertThat(account.history()).isEqualTo(expectedEmptyHistory);
     }
 }

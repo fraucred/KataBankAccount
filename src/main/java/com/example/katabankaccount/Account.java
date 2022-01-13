@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class Account {
     private Money balance = new Money(BigDecimal.ZERO);
+    private final History history = new History();
 
     public Account() {
     }
@@ -27,5 +28,9 @@ public class Account {
 
     public void withdrawAll() {
         this.balance.substract(this.balance);
+    }
+
+    public History history() {
+        return history;
     }
 }

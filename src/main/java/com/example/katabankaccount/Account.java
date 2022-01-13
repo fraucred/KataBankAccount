@@ -3,18 +3,29 @@ package com.example.katabankaccount;
 import java.math.BigDecimal;
 
 public class Account {
-    private final Money balance = new Money(BigDecimal.ZERO);
+    private Money balance = new Money(BigDecimal.ZERO);
+
+    public Account() {
+    }
+
+    public Account(Money balance) {
+        this.balance = balance;
+    }
 
     public void deposit(Money money) {
         this.balance.add(money);
     }
 
-    public Money money() {
+    public Money balance() {
         return balance;
     }
 
 
     public void withdraw(Money money) {
+        this.balance.substract(money);
+    }
 
+    public void withdrawAll() {
+        this.balance.substract(this.balance);
     }
 }

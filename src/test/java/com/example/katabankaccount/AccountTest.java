@@ -15,7 +15,7 @@ public class AccountTest {
 
         account.deposit(money);
 
-        assertThat(account.money()).isEqualTo(money);
+        assertThat(account.balance()).isEqualTo(money);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class AccountTest {
         account.deposit(money);
         account.deposit(money);
 
-        assertThat(account.money()).isEqualTo(expectedMoney);
+        assertThat(account.balance()).isEqualTo(expectedMoney);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class AccountTest {
 
         account.deposit(zeroAmountMoney);
 
-        assertThat(account.money()).isEqualTo(zeroAmountMoney);
+        assertThat(account.balance()).isEqualTo(zeroAmountMoney);
     }
 
     @Test
@@ -48,6 +48,44 @@ public class AccountTest {
 
         account.withdraw(money);
 
-        assertThat(account.money()).isEqualTo(expectedMoney);
+        assertThat(account.balance()).isEqualTo(expectedMoney);
+    }
+
+    @Test
+    public void should_withdraw_twice_money_from_account() {
+        Account account = new Account();
+        Money money = new Money(BigDecimal.valueOf(10));
+        Money expectedMoney = new Money(BigDecimal.valueOf(-20));
+
+        account.withdraw(money);
+        account.withdraw(money);
+
+        assertThat(account.balance()).isEqualTo(expectedMoney);
+    }
+
+    @Test
+    public void should_withdraw_all_money_from_account_with_money_in_balance() {
+        Money oldBalance = new Money(BigDecimal.valueOf(9999999));
+        Account account = new Account(oldBalance);
+        Money expectedMoney = new Money(BigDecimal.ZERO);
+
+        account.withdrawAll();
+
+        assertThat(account.balance()).isEqualTo(expectedMoney);
+    }
+
+    @Test
+    public void should_withdraw_all_money_from_account() {
+        Account account = new Account();
+        Money expectedMoney = new Money(BigDecimal.ZERO);
+
+        account.withdrawAll();
+
+        assertThat(account.balance()).isEqualTo(expectedMoney);
+    }
+
+    @Test
+    public void should_get_history_of_operations() {
+
     }
 }

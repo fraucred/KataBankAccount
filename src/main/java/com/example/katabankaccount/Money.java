@@ -14,6 +14,10 @@ public class Money {
         this.amount = this.amount.add(money.amount);
     }
 
+    public void substract(Money money) {
+        this.amount = this.amount.subtract(money.amount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -28,12 +28,12 @@ public class Account {
 
 
     public void withdraw(Money money) {
-        this.balance.substract(money);
-        this.histories.add(new History(OperationType.WITHDRAW, Date.from(Instant.now()), money, this.balance));
+        this.balance.subtract(money);
+        this.histories.add(new History(OperationType.WITHDRAW, Date.from(Instant.now()), money, this.balance.copy()));
     }
 
     public void withdrawAll() {
-        this.balance.substract(this.balance);
+        this.balance.subtract(this.balance);
     }
 
     public List<History> histories() {

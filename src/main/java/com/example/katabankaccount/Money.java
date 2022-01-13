@@ -14,7 +14,7 @@ public class Money {
         this.amount = this.amount.add(money.amount);
     }
 
-    public void substract(Money money) {
+    public void subtract(Money money) {
         this.amount = this.amount.subtract(money.amount);
     }
 

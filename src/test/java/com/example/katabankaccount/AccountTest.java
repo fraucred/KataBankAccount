@@ -3,7 +3,11 @@ package com.example.katabankaccount;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.Arrays;
+import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountTest {
@@ -87,8 +91,23 @@ public class AccountTest {
     @Test
     public void should_get_empty_history_of_operations_from_my_account() {
         Account account = new Account();
-        History expectedEmptyHistory = new History();
 
-        assertThat(account.history()).isEqualTo(expectedEmptyHistory);
+        assertThat(account.histories()).isEqualTo(emptyList());
+    }
+
+    @Test
+    public void should_get_history_of_deposit_and_withdrawal_operations_from_my_account() {
+        Account account = new Account();
+        Money moneyToBeSaved = new Money(BigDecimal.valueOf(200));
+        Money moneyToDraw = new Money(BigDecimal.valueOf(25));
+
+        History depositHistory = new History(OperationType.DEPOSIT, Date.from(InstantHelper.now()), moneyToBeSaved, new Money(BigDecimal.valueOf(200)));
+        History withdrawHistory = new History(OperationType.WITHDRAW, Date.from(InstantHelper.now()), moneyToDraw, new Money(BigDecimal.valueOf(175)));
+        List<History> expectedHistories = Arrays.asList(depositHistory, withdrawHistory);
+
+        account.deposit(moneyToBeSaved);
+        account.withdraw(moneyToDraw);
+
+        assertThat(account.histories()).isEqualTo(expectedHistories);
     }
 }

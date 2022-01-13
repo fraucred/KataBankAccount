@@ -30,4 +30,8 @@ public class Money {
     public int hashCode() {
         return Objects.hash(amount);
     }
+
+    public Money copy() {
+        return new Money(this.amount);
+    }
 }

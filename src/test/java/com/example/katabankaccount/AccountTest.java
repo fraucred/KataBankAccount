@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,24 +46,26 @@ public class AccountTest {
     }
 
     @Test
-    public void should_make_single_withdraw_from_account() {
-        Money oldBalance = new Money(20);
-        Account account = new Account(oldBalance);
-        Money money = new Money(10);
-        Money expectedBalance = new Money(10);
-
-        account.withdraw(money);
-
-        assertThat(account.balance()).isEqualTo(expectedBalance);
-    }
-
-    @Test
-    public void should_withdraw_twice_money_from_account() {
-        Money oldBalance = new Money(20);
-        Account account = new Account(oldBalance);
+    public void should_make_single_withdraw_from_account_after_deposit() {
+        Account account = new Account();
         Money money = new Money(10);
         Money expectedBalance = new Money(0);
 
+        account.deposit(money);
+        account.withdraw(money);
+
+        assertThat(account.balance()).isEqualTo(expectedBalance);
+    }
+
+    @Test
+    public void should_make_two_withdraws_from_account_after_two_deposit() {
+        Account account = new Account();
+        Money money = new Money(10);
+        Money lotsOfMoney = new Money(100);
+        Money expectedBalance = new Money(180);
+
+        account.deposit(lotsOfMoney);
+        account.deposit(lotsOfMoney);
         account.withdraw(money);
         account.withdraw(money);
 
@@ -70,7 +73,7 @@ public class AccountTest {
     }
 
     @Test
-    public void should_withdraw_more_money_from_account() {
+    public void should_make_one_withdraw_from_empty_account() {
         Account account = new Account();
         Money money = new Money(100);
         Money expectedBalance = new Money(-100);
@@ -81,21 +84,12 @@ public class AccountTest {
     }
 
     @Test
-    public void should_withdraw_all_money_from_account_with_money_in_balance() {
-        Money oldBalance = new Money(9999999);
-        Account account = new Account(oldBalance);
-        Money expectedMoney = new Money(0);
-
-        account.withdrawAll();
-
-        assertThat(account.balance()).isEqualTo(expectedMoney);
-    }
-
-    @Test
-    public void should_withdraw_all_money_from_new_account() {
+    public void should_withdraw_all_money_from_account_after_deposit() {
+        Money moneySaved = new Money(9999999);
         Account account = new Account();
         Money expectedMoney = new Money(0);
 
+        account.deposit(moneySaved);
         account.withdrawAll();
 
         assertThat(account.balance()).isEqualTo(expectedMoney);
@@ -114,8 +108,8 @@ public class AccountTest {
         Money moneyToBeSaved = new Money(200);
         Money moneyToDraw = new Money(25);
 
-        Transaction depositTransaction = new Transaction(OperationType.DEPOSIT, Date.from(Instant.now()), moneyToBeSaved, new Money(200));
-        Transaction withdrawTransaction = new Transaction(OperationType.WITHDRAW, Date.from(Instant.now()), moneyToDraw, new Money(175));
+        Transaction depositTransaction = new Transaction(OperationType.DEPOSIT, Date.from(Instant.now()), moneyToBeSaved, Optional.empty());
+        Transaction withdrawTransaction = new Transaction(OperationType.WITHDRAW, Date.from(Instant.now()), moneyToDraw, Optional.of(depositTransaction));
         List<Transaction> expectedHistories = Arrays.asList(depositTransaction, withdrawTransaction);
 
         account.deposit(moneyToBeSaved);

@@ -10,12 +10,14 @@ public class Money {
         this.amount = new BigDecimal(i);
     }
 
-    public void add(Money money) {
+    public Money add(Money money) {
         this.amount = this.amount.add(money.amount);
+        return this;
     }
 
-    public void subtract(Money money) {
+    public Money subtract(Money money) {
         this.amount = this.amount.subtract(money.amount);
+        return this;
     }
 
     @Override
@@ -33,5 +35,9 @@ public class Money {
 
     public Money copy() {
         return new Money(this.amount.intValue());
+    }
+
+    public Money opposite() {
+        return new Money(-this.amount.intValue());
     }
 }

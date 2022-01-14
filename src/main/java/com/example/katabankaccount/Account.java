@@ -4,38 +4,42 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Account {
     private final List<Transaction> transactions = new ArrayList<>();
-    private Money balance = new Money(0);
 
     public Account() {
     }
 
-    public Account(Money balance) {
-        this.balance = balance;
+    private Optional<Transaction> latestTransaction() {
+        if (transactions.size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(transactions.get(transactions.size() - 1));
     }
 
     public void deposit(Money money) {
-        this.balance.add(money);
-        this.transactions.add(new Transaction(OperationType.DEPOSIT, Date.from(Instant.now()), money, this.balance.copy()));
+        this.transactions.add(new Transaction(OperationType.DEPOSIT, Date.from(Instant.now()), money, latestTransaction()));
+    }
+
+    public void withdraw(Money money) {
+        this.transactions.add(new Transaction(OperationType.WITHDRAW, Date.from(Instant.now()), money, latestTransaction()));
     }
 
     public Money balance() {
-        return balance;
-    }
-
-
-    public void withdraw(Money money) {
-        this.balance.subtract(money);
-        this.transactions.add(new Transaction(OperationType.WITHDRAW, Date.from(Instant.now()), money, this.balance.copy()));
-    }
-
-    public void withdrawAll() {
-        this.balance.subtract(this.balance);
+        if (latestTransaction().isPresent()) {
+            Transaction latestTransaction = latestTransaction().get();
+            return latestTransaction.balance();
+        }
+        throw new IllegalStateException("There are none transactions yet. Account balance does not exist.");
     }
 
     public List<Transaction> transactions() {
         return transactions;
+    }
+
+    public void withdrawAll() {
+        withdraw(balance());
     }
 }

@@ -32,7 +32,7 @@ public class Account {
             Transaction latestTransaction = latestTransaction().get();
             return latestTransaction.balance();
         }
-        throw new IllegalStateException("There are none transactions yet. Account balance does not exist.");
+        return new Money(0);
     }
 
     public List<Transaction> transactions() {

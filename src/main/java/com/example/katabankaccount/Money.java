@@ -6,8 +6,8 @@ import java.util.Objects;
 public class Money {
     private BigDecimal amount;
 
-    public Money(BigDecimal amount) {
-        this.amount = amount;
+    public Money(int i) {
+        this.amount = new BigDecimal(i);
     }
 
     public void add(Money money) {
@@ -32,6 +32,6 @@ public class Money {
     }
 
     public Money copy() {
-        return new Money(this.amount);
+        return new Money(this.amount.intValue());
     }
 }

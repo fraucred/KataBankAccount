@@ -1,15 +1,17 @@
 package com.example.katabankaccount;
 
-import java.sql.Date;
-import java.time.Instant;
+import com.example.katabankaccount.helper.DateHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Account {
     private final List<Transaction> transactions = new ArrayList<>();
+    private final DateHelper dateHelper;
 
-    public Account() {
+    public Account(DateHelper dateHelper) {
+        this.dateHelper = dateHelper;
     }
 
     private Optional<Transaction> latestTransaction() {
@@ -20,11 +22,11 @@ public class Account {
     }
 
     public void deposit(Money money) {
-        this.transactions.add(new Transaction(OperationType.DEPOSIT, Date.from(Instant.now()), money, latestTransaction()));
+        this.transactions.add(new Transaction(OperationType.DEPOSIT, dateHelper.now(), money, latestTransaction()));
     }
 
     public void withdraw(Money money) {
-        this.transactions.add(new Transaction(OperationType.WITHDRAW, Date.from(Instant.now()), money, latestTransaction()));
+        this.transactions.add(new Transaction(OperationType.WITHDRAW, dateHelper.now(), money, latestTransaction()));
     }
 
     public Money balance() {

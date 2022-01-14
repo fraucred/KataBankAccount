@@ -25,9 +25,13 @@ public class Transaction {
             return amount.opposite();
         }
         if (isDepositOperation(operationType)) {
-            return optionalTransaction.get().balance.copy().add(amount);
+            return getNewBalance(optionalTransaction).add(amount);
         }
-        return optionalTransaction.get().balance.copy().subtract(amount);
+        return getNewBalance(optionalTransaction).subtract(amount);
+    }
+
+    private Money getNewBalance(Optional<Transaction> optionalTransaction) {
+        return optionalTransaction.get().balance.copy();
     }
 
     private boolean isDepositOperation(OperationType operationType) {

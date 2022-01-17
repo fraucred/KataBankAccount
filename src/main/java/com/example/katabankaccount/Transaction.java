@@ -2,36 +2,23 @@ package com.example.katabankaccount;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Transaction {
     private final OperationType operationType;
     private final Date date;
     private final Money amount;
-    private final Money balance;
 
-    public Transaction(OperationType operationType, Date date, Money amount, Optional<Transaction> optionalTransaction) {
+    public Transaction(OperationType operationType, Date date, Money amount) {
         this.operationType = operationType;
         this.date = date;
         this.amount = amount;
-        this.balance = addOrSubtractMoney(operationType, amount, optionalTransaction);
     }
 
-    private Money addOrSubtractMoney(OperationType operationType, Money amount, Optional<Transaction> optionalTransaction) {
-        if (optionalTransaction.isEmpty() && isDepositOperation(operationType)) {
-            return amount.copy();
-        }
-        if (optionalTransaction.isEmpty() && !isDepositOperation(operationType)) {
-            return amount.opposite();
-        }
+    public Money getAmountByOperationType() {
         if (isDepositOperation(operationType)) {
-            return getNewBalance(optionalTransaction).add(amount);
+            return this.amount;
         }
-        return getNewBalance(optionalTransaction).subtract(amount);
-    }
-
-    private Money getNewBalance(Optional<Transaction> optionalTransaction) {
-        return optionalTransaction.get().balance.copy();
+        return this.amount.opposite();
     }
 
     private boolean isDepositOperation(OperationType operationType) {
@@ -43,15 +30,12 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction transaction = (Transaction) o;
-        return operationType == transaction.operationType && Objects.equals(date, transaction.date) && Objects.equals(amount, transaction.amount) && Objects.equals(balance, transaction.balance);
+        return operationType == transaction.operationType && Objects.equals(date, transaction.date) && Objects.equals(amount, transaction.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(operationType, date, amount, balance);
+        return Objects.hash(operationType, date, amount);
     }
 
-    public Money balance() {
-        return balance;
-    }
 }

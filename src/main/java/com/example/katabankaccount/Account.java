@@ -1,40 +1,37 @@
 package com.example.katabankaccount;
 
-import com.example.katabankaccount.helper.DateHelper;
+import com.example.katabankaccount.provider.DateProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static com.example.katabankaccount.Money.createMoneyFromPositiveValue;
 
 public class Account {
     private final List<Transaction> transactions = new ArrayList<>();
-    private final DateHelper dateHelper;
+    private final DateProvider dateProvider;
 
-    public Account(DateHelper dateHelper) {
-        this.dateHelper = dateHelper;
+    public Account(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
     }
 
-    private Optional<Transaction> latestTransaction() {
-        if (transactions.size() == 0) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(transactions.get(transactions.size() - 1));
-    }
 
     public void deposit(Money money) {
-        this.transactions.add(new Transaction(OperationType.DEPOSIT, dateHelper.now(), money, latestTransaction()));
+        this.transactions.add(new Transaction(OperationType.DEPOSIT, dateProvider.nowDefaultDate(), money));
     }
 
     public void withdraw(Money money) {
-        this.transactions.add(new Transaction(OperationType.WITHDRAW, dateHelper.now(), money, latestTransaction()));
+        this.transactions.add(new Transaction(OperationType.WITHDRAW, dateProvider.nowDefaultDate(), money));
     }
 
     public Money balance() {
-        if (latestTransaction().isPresent()) {
-            Transaction latestTransaction = latestTransaction().get();
-            return latestTransaction.balance();
+        if (transactions.isEmpty()) {
+            return createMoneyFromPositiveValue(0);
         }
-        return new Money(0);
+        return transactions.stream()
+                .map(Transaction::getAmountByOperationType)
+                .reduce(Money::add)
+                .orElse(createMoneyFromPositiveValue(0));
     }
 
     public List<Transaction> transactions() {

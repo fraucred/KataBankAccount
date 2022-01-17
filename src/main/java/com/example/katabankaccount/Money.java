@@ -6,17 +6,12 @@ import java.util.Objects;
 public class Money {
     private BigDecimal amount;
 
-    public Money(int i) {
+    private Money(int i) {
         this.amount = new BigDecimal(i);
     }
 
     public Money add(Money money) {
         this.amount = this.amount.add(money.amount);
-        return this;
-    }
-
-    public Money subtract(Money money) {
-        this.amount = this.amount.subtract(money.amount);
         return this;
     }
 
@@ -33,11 +28,21 @@ public class Money {
         return Objects.hash(amount);
     }
 
-    public Money copy() {
-        return new Money(this.amount.intValue());
-    }
-
     public Money opposite() {
         return new Money(-this.amount.intValue());
+    }
+
+    public static Money createMoneyFromPositiveValue(int i) {
+        if (i < 0) {
+            throw new RuntimeException("Money needs a positive value higher or equal to 0");
+        }
+        return new Money(i);
+    }
+
+    public static Money createMoneyFromNegativeValue(int i) {
+        if (i > 0) {
+            throw new RuntimeException("Money needs a negative value lower or equal to 0");
+        }
+        return new Money(i);
     }
 }

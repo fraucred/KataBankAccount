@@ -6,13 +6,23 @@ import java.util.Objects;
 public class Money {
     private BigDecimal amount;
 
-    private Money(int i) {
+    public Money(int i) {
+        checkPositiveValue(i);
         this.amount = new BigDecimal(i);
     }
 
-    public Money add(Money money) {
+    public void add(Money money) {
         this.amount = this.amount.add(money.amount);
-        return this;
+    }
+
+    public void subtract(Money money) {
+        this.amount = this.amount.subtract(money.amount);
+    }
+
+    public void checkPositiveValue(int i) {
+        if (i < 0) {
+            throw new RuntimeException("Money needs a positive value higher or equal to 0");
+        }
     }
 
     @Override
@@ -28,21 +38,4 @@ public class Money {
         return Objects.hash(amount);
     }
 
-    public Money opposite() {
-        return new Money(-this.amount.intValue());
-    }
-
-    public static Money createMoneyFromPositiveValue(int i) {
-        if (i < 0) {
-            throw new RuntimeException("Money needs a positive value higher or equal to 0");
-        }
-        return new Money(i);
-    }
-
-    public static Money createMoneyFromNegativeValue(int i) {
-        if (i > 0) {
-            throw new RuntimeException("Money needs a negative value lower or equal to 0");
-        }
-        return new Money(i);
-    }
 }

@@ -5,7 +5,6 @@ import com.example.katabankaccount.provider.DateProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.katabankaccount.Money.createMoneyFromPositiveValue;
 
 public class Account {
     private final List<Transaction> transactions = new ArrayList<>();
@@ -25,13 +24,18 @@ public class Account {
     }
 
     public Money balance() {
+        final Money balance = new Money(0);
         if (transactions.isEmpty()) {
-            return createMoneyFromPositiveValue(0);
+            return balance;
         }
-        return transactions.stream()
-                .map(Transaction::getAmountByOperationType)
-                .reduce(Money::add)
-                .orElse(createMoneyFromPositiveValue(0));
+        for (Transaction transaction : transactions) {
+            if (transaction.isDepositOperation()) {
+                balance.add(transaction.getAmount());
+            } else {
+                balance.subtract(transaction.getAmount());
+            }
+        }
+        return balance;
     }
 
     public List<Transaction> transactions() {

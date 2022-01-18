@@ -14,15 +14,12 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Money getAmountByOperationType() {
-        if (isDepositOperation(operationType)) {
-            return this.amount;
-        }
-        return this.amount.opposite();
+    public boolean isDepositOperation() {
+        return OperationType.DEPOSIT.equals(operationType);
     }
 
-    private boolean isDepositOperation(OperationType operationType) {
-        return operationType.equals(OperationType.DEPOSIT);
+    public Money getAmount() {
+        return amount;
     }
 
     @Override
@@ -37,5 +34,4 @@ public class Transaction {
     public int hashCode() {
         return Objects.hash(operationType, date, amount);
     }
-
 }

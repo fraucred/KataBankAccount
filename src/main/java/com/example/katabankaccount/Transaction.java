@@ -1,14 +1,14 @@
 package com.example.katabankaccount;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Transaction {
     private final OperationType operationType;
-    private final Date date;
+    private final LocalDateTime date;
     private final Money amount;
 
-    public Transaction(OperationType operationType, Date date, Money amount) {
+    public Transaction(OperationType operationType, LocalDateTime date, Money amount) {
         this.operationType = operationType;
         this.date = date;
         this.amount = amount;
@@ -18,7 +18,7 @@ public class Transaction {
         return OperationType.DEPOSIT.equals(operationType);
     }
 
-    public Money getAmount() {
+    public Amount getAmount() {
         return amount;
     }
 

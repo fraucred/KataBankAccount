@@ -7,7 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,22 +23,21 @@ public class HistoryTest {
 
     @BeforeEach
     void setUp() {
-        when(dateProvider.nowDefaultDate()).thenReturn(new Date(123456));
+        when(dateProvider.now()).thenReturn(LocalDateTime.of(2022, 01, 19, 12, 00, 25, 50));
     }
 
     @Test
     public void should_get_history_of_deposit_and_withdrawal_operations_from_my_account() {
         Account account = new Account(dateProvider);
-        Money moneyToBeSaved = new Money(200);
-        Money moneyToDraw = new Money(25);
-
-        Transaction depositTransaction = new Transaction(OperationType.DEPOSIT, dateProvider.nowDefaultDate(), moneyToBeSaved);
-        Transaction withdrawTransaction = new Transaction(OperationType.WITHDRAW, dateProvider.nowDefaultDate(), moneyToDraw);
-        List<Transaction> expectedHistories = Arrays.asList(depositTransaction, withdrawTransaction);
+        Money moneyToBeSaved = new Money(BigDecimal.valueOf(200));
+        Money moneyToDraw = new Money(BigDecimal.valueOf(25));
 
         account.deposit(moneyToBeSaved);
         account.withdraw(moneyToDraw);
 
+        Transaction depositTransaction = new Transaction(OperationType.DEPOSIT, dateProvider.now(), moneyToBeSaved);
+        Transaction withdrawTransaction = new Transaction(OperationType.WITHDRAW, dateProvider.now(), moneyToDraw);
+        List<Transaction> expectedHistories = Arrays.asList(depositTransaction, withdrawTransaction);
         assertThat(account.transactions()).isEqualTo(expectedHistories);
     }
 }

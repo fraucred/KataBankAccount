@@ -1,41 +1,18 @@
 package com.example.katabankaccount;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-public class Money {
-    private BigDecimal amount;
+public class Money extends Amount {
 
-    public Money(int i) {
-        checkPositiveValue(i);
-        this.amount = new BigDecimal(i);
+    public Money(BigDecimal amount) {
+        super(amount);
+        checkPositiveValue(amount);
     }
 
-    public void add(Money money) {
-        this.amount = this.amount.add(money.amount);
-    }
-
-    public void subtract(Money money) {
-        this.amount = this.amount.subtract(money.amount);
-    }
-
-    public void checkPositiveValue(int i) {
-        if (i < 0) {
+    public void checkPositiveValue(BigDecimal value) {
+        if (value.signum() < 0) {
             throw new RuntimeException("Money needs a positive value higher or equal to 0");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Money money = (Money) o;
-        return Objects.equals(amount, money.amount);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(amount);
     }
 
 }
